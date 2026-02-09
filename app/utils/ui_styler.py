@@ -5,7 +5,7 @@ from enum import Enum
 class Colour(Enum):
     PRIMARY = "#FFFFFF"
     SECONDARY = "#FFFFFF"
-    BASE = "#FFFFFF"
+    BASE = "#353535"
     BASE2 = "#FFFFFF"
     OUTLINE = "#FFFFFF"
     FONT = "#FFFFFF"
@@ -14,29 +14,24 @@ class Size(Enum):
     PADDING = "8px"
     BORDER_RADIUS = "6px"
 
-class UIStyler(QWidget):
-    def __init__(self):
-        super().__init__()
-    
-
-    def style_primary_frame(frame):
+class UIStyler():
+    def style_primary_frame(self, frame):
         frame.setStyleSheet(f"""
-            QPushButton {{
-                background-color: {Colour.BASE};
-                padding: {Size.PADDING};
-                border-radius: {Size.BORDER_RADIUS};
+            QFrame {{
+                background-color: {Colour.BASE.value};
             }}
         """)
-
-
-
-    def style_button_default(button):
+        
+    def style_button_default(self, button):
         button.setStyleSheet(f"""
             QPushButton {{
-                background-color: {Colour.BASE};
-                color: {Colour.FONT};
-                padding: {Size.PADDING};
-                border-radius: {Size.BORDER_RADIUS};
+                background-color: {Colour.BASE.value};
+                color: {Colour.FONT.value};
+                padding: {Size.PADDING.value};
+                border-radius: {Size.BORDER_RADIUS.value};
             }}
         """)
-
+    
+    def set_screen_margin(self, widget):
+        widget.setContentsMargins(20, 20, 20, 20)
+    
