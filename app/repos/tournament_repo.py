@@ -5,10 +5,9 @@ class TournamentRepo:
         self.__schema_cur = schema_cursor
     
 
-    def databases_list(self):
+    def get_databases(self) -> list[tuple]:
         self.__schema_cur.execute("SHOW DATABASES;")
         result = self.__schema_cur.fetchall()
-        db_names = [db[0] for db in result]
-        return db_names
+        return result
 
     
