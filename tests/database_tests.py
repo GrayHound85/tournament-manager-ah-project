@@ -1,7 +1,7 @@
 from app.database.mysql_server_connection import Database
 from app.repos.tournament_repo import TournamentRepo
 from app.controllers.tournament_selector_controller import TournamentSelectorController
-
+0
 def connectivity_test():
     db = Database(host="localhost", username="root", password="7632")
     print(db.connect_to_server())
@@ -14,8 +14,6 @@ def show_databases_test():
     tournament_selector_controller = TournamentSelectorController(tournament_repo=tournament_repo)
     database_list = tournament_selector_controller.database_list()
     print(database_list)
-
-
 
 
 def main():
