@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QWidget, QFrame, QVBoxLayout, QHBoxLayout, QSizePolicy, QLabel
+from PyQt6.QtWidgets import QWidget, QFrame, QVBoxLayout, QHBoxLayout, QSizePolicy, QLabel, QPushButton
 from PyQt6.QtCore import Qt
 from utils.ui_styler import UIStyler
 
@@ -88,3 +88,16 @@ class TournamentSelectorScreen(QWidget, UIStyler):
 
 
         # Create or open tournament buttons
+        panel_1_content_layout = QVBoxLayout(panel_1)
+        panel_1_content_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        panel_1_content_layout.setSpacing(40)
+        
+        open_tournament_button = QPushButton("Open Tournament")
+        open_tournament_button.setFixedSize(400,100)
+        self.style_button_default(open_tournament_button, "25px")
+        panel_1_content_layout.addWidget(open_tournament_button)
+
+        create_tournament_button = QPushButton("Create Tournament")
+        create_tournament_button.setFixedSize(400, 100)
+        self.style_button_default(create_tournament_button, "25px")
+        panel_1_content_layout.addWidget(create_tournament_button)
