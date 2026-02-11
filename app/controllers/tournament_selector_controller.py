@@ -10,7 +10,7 @@ class TournamentSelectorController:
         self.__tournament_repo: "TournamentRepo" = tournament_repo
 
     
-    def database_list(self):
+    def get_all_tournament(self) -> list[str]:
         result = self.__tournament_repo.get_databases()
         db_names = [db[0] for db in result]
         return db_names

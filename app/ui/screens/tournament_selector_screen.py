@@ -1,7 +1,8 @@
-from PyQt6.QtWidgets import QWidget, QFrame, QVBoxLayout, QHBoxLayout, QSizePolicy, QLabel, QPushButton
+from PyQt6.QtWidgets import QWidget, QFrame, QVBoxLayout, QHBoxLayout, QSizePolicy, QLabel, QPushButton, QStackedWidget
 from PyQt6.QtCore import Qt
 from utils.ui_styler import UIStyler
 from ui.components.create_tournament_panel import CreateTournamentPanel
+from ui.components.open_tourmanent_panel import OpenTournamentPanel
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -95,18 +96,30 @@ class TournamentSelectorScreen(QWidget, UIStyler):
         
         open_tournament_button = QPushButton("Open Tournament")
         open_tournament_button.setFixedSize(400,100)
-        self.style_button_default(open_tournament_button, "25px")
+        self.style_button(open_tournament_button, "25px")
         panel_1_content_layout.addWidget(open_tournament_button)
+        open_tournament_button.clicked.connect(lambda: panel_stacker.setCurrentIndex(1))
 
         create_tournament_button = QPushButton("Create Tournament")
         create_tournament_button.setFixedSize(400, 100)
-        self.style_button_default(create_tournament_button, "25px")
+        self.style_button(create_tournament_button, "25px")
         panel_1_content_layout.addWidget(create_tournament_button)
+        create_tournament_button.clicked.connect(lambda: panel_stacker.setCurrentIndex(0))
 
+        # Create or open tournament panels
         panel_2_content_layout = QVBoxLayout(panel_2)
-        panel_2_content_layout.setContentsMargins(100,100,100,100)
+        panel_2_content_layout.setContentsMargins(0,0,0,0)
 
-        # Create tournament panel
-        create_tournament_panel = CreateTournamentPanel()
-        panel_2_content_layout.addWidget(create_tournament_panel)
+        panel_stacker = QStackedWidget()
+        panel_2_content_layout.addWidget(panel_stacker)
+
+        self.create_tournament_panel = CreateTournamentPanel()        
+        panel_stacker.addWidget(self.create_tournament_panel)
+
+
+        self.open_tournament_panel = OpenTournamentPanel()
+        panel_stacker.addWidget(self.open_tournament_panel)
+        tournaments = self.__controller.get_all_tournament()
+        self.open_tournament_panel.display_tournaments(tournaments=tournaments)
+
         

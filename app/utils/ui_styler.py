@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QWidget, QFrame, QPushButton, QLineEdit, QLabel
+from PyQt6.QtWidgets import QWidget, QFrame, QPushButton, QLineEdit, QLabel, QScrollArea
 from PyQt6.QtCore import Qt
 from enum import Enum
 
@@ -8,7 +8,7 @@ class Colour(Enum):
     BASE = "#DFDFDF"
     BASE2 = "#CECECE"
     Base3 = "#A5A5A5"
-    OUTLINE = "#FFFFFF"
+    OUTLINE = "#ADADAD"
     FONT = "#535353"
     FONT_INVERSE = "#EAEAEA"
     ERROR = "#F21515"
@@ -26,10 +26,21 @@ class UIStyler():
             }}
         """)
         
-    def style_button_default(self, button: QPushButton, size: str = "12px") -> None:
+    def style_button(self, button: QPushButton, size: str = "12px") -> None:
         button.setStyleSheet(f"""
             QPushButton {{
                 background-color: {Colour.PRIMARY.value};
+                color: {Colour.FONT_INVERSE.value};
+                padding: {Size.PADDING.value};
+                border-radius: {Size.BORDER_RADIUS.value};
+                font-size: {size};
+            }}
+        """)
+    
+    def style_button_2(self, button: QPushButton, size: str = "12px") -> None:
+        button.setStyleSheet(f"""
+            QPushButton {{
+                background-color: {Colour.Base3.value};
                 color: {Colour.FONT_INVERSE.value};
                 padding: {Size.PADDING.value};
                 border-radius: {Size.BORDER_RADIUS.value};
@@ -89,4 +100,13 @@ class UIStyler():
                 color: {Colour.ERROR.value};
                 font-size: {size};
             }}
-        """)   
+        """) 
+    
+    def style_scroll_area(self, scroll_area: QScrollArea):
+        scroll_area.setStyleSheet(f"""
+            QScrollArea {{
+                border: {Size.LINE_THICKNESS.value} solid {Colour.OUTLINE.value};
+                border-radius: {Size.BORDER_RADIUS.value};
+                background: transparent;
+            }}
+        """) 
