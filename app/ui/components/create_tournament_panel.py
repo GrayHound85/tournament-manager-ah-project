@@ -17,7 +17,7 @@ class CreateTournamentPanel(QWidget, UIStyler):
         tournament_name_input = QLineEdit()
         tournament_name_input.setPlaceholderText("Enter tournament name")
         self.style_line_edit(tournament_name_input, "20px")
-        tournament_name_input.setFixedHeight(50)
+        tournament_name_input.setFixedHeight(60)
 
         validation_error_label = QLabel("This will only appear when validtion fails")
         self.style_error_label(validation_error_label)

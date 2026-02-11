@@ -1,5 +1,6 @@
-from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QScrollArea, QSizePolicy
+from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QScrollArea, QSizePolicy, QFrame
 from PyQt6.QtCore import pyqtSignal, Qt
+from PyQt6.QtGui import QIcon
 from utils.ui_styler import UIStyler
 
 class OpenTournamentPanel(QWidget, UIStyler):
@@ -21,12 +22,14 @@ class OpenTournamentPanel(QWidget, UIStyler):
 
         scroll_content = QWidget()
         scroll_content.setStyleSheet("background: transparent;")
+        scroll_content.setContentsMargins(0,0,0,0)
 
         panel_layout.addWidget(header_label)
         panel_layout.addSpacing(6)
         panel_layout.addWidget(scroll_area)
         self.tournament_row_layout = QVBoxLayout(scroll_content)
         self.tournament_row_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        self.tournament_row_layout.setSpacing(10)
         scroll_area.setWidget(scroll_content)
 
     
@@ -44,7 +47,7 @@ class OpenTournamentPanel(QWidget, UIStyler):
 
     
 
-class TournamentRow(QWidget, UIStyler):
+class TournamentRow(QFrame, UIStyler):
     def __init__(self, tournament_name):
         super().__init__()
         self.__name = tournament_name
@@ -52,9 +55,21 @@ class TournamentRow(QWidget, UIStyler):
     
 
     def setup_ui(self):
+        self.style_panel_2(frame=self)
+        self.setFixedHeight(60)
+        self.setContentsMargins(0,0,0,0)
         button = QPushButton(self.__name)
-        button.setFixedHeight(50)
+        button.setFixedHeight(60)
+        button.setFlat(True)
         self.style_button_2(button, "20px")
         layout = QHBoxLayout(self)
         layout.addWidget(button)
+        layout.setContentsMargins(0,0,0,0)
+
+        delete_button = QPushButton()
+        delete_button.setFixedSize(60,60)
+        delete_button.setFlat(True)
+        delete_button.setIcon(QIcon.fromTheme("preferences-system"))
+        delete_button.setIconSize(delete_button.size())
+        layout.addWidget(delete_button)
 
