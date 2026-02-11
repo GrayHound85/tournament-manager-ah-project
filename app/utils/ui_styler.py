@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QWidget, QFrame, QPushButton
+from PyQt6.QtWidgets import QWidget, QFrame, QPushButton, QLineEdit, QLabel
 from PyQt6.QtCore import Qt
 from enum import Enum
 
@@ -7,9 +7,11 @@ class Colour(Enum):
     SECONDARY = "#E1C80B"
     BASE = "#DFDFDF"
     BASE2 = "#CECECE"
+    Base3 = "#A5A5A5"
     OUTLINE = "#FFFFFF"
     FONT = "#535353"
     FONT_INVERSE = "#EAEAEA"
+    ERROR = "#F21515"
 
 class Size(Enum):
     PADDING = "8px"
@@ -39,11 +41,11 @@ class UIStyler():
         widget.setContentsMargins(20, 20, 20, 20)
     
 
-    def set_font_heading(self, widget):
+    def set_font_heading(self, widget, size: str = "50px"):
         widget.setStyleSheet(f"""
             * {{
                 color: {Colour.FONT.value};
-                font-size: 50px;
+                font-size: {size};
             }}
         """)
     
@@ -70,3 +72,21 @@ class UIStyler():
             }}
         """)
     
+    def style_line_edit(self, widget: QLineEdit, size: str = "10px"):
+        widget.setStyleSheet(f"""
+            QLineEdit {{
+                background-color: {Colour.Base3.value};
+                color: {Colour.FONT_INVERSE.value};
+                padding: {Size.PADDING.value};
+                border-radius: {Size.BORDER_RADIUS.value};
+                font-size: {size};
+            }}
+        """)
+    
+    def style_error_label(self, label: QLabel, size: str = "20px"):
+        label.setStyleSheet(f"""
+            QLabel {{
+                color: {Colour.ERROR.value};
+                font-size: {size};
+            }}
+        """)   

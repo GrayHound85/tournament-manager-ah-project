@@ -1,6 +1,7 @@
 from PyQt6.QtWidgets import QWidget, QFrame, QVBoxLayout, QHBoxLayout, QSizePolicy, QLabel, QPushButton
 from PyQt6.QtCore import Qt
 from utils.ui_styler import UIStyler
+from ui.components.create_tournament_panel import CreateTournamentPanel
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -101,3 +102,11 @@ class TournamentSelectorScreen(QWidget, UIStyler):
         create_tournament_button.setFixedSize(400, 100)
         self.style_button_default(create_tournament_button, "25px")
         panel_1_content_layout.addWidget(create_tournament_button)
+
+        panel_2_content_layout = QVBoxLayout(panel_2)
+        panel_2_content_layout.setContentsMargins(100,100,100,100)
+
+        # Create tournament panel
+        create_tournament_panel = CreateTournamentPanel()
+        panel_2_content_layout.addWidget(create_tournament_panel)
+        
