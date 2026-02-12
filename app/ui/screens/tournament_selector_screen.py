@@ -113,7 +113,9 @@ class TournamentSelectorScreen(QWidget, UIStyler):
         panel_stacker = QStackedWidget()
         panel_2_content_layout.addWidget(panel_stacker)
 
-        self.create_tournament_panel = CreateTournamentPanel()        
+        self.create_tournament_panel = CreateTournamentPanel() 
+        self.create_tournament_panel.submitPressed.connect(self.__controller.submit_tournament_creation)
+        self.__controller.validationError.connect(self.create_tournament_panel.handle_validation_result)      
         panel_stacker.addWidget(self.create_tournament_panel)
 
 

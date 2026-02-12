@@ -10,4 +10,5 @@ class TournamentRepo:
         result = self.__schema_cur.fetchall()
         return result
 
-    
+    def add_tournament(self, name):
+        print(f"Adding tournament... {name}")

@@ -1,13 +1,15 @@
 from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout, QLineEdit, QPushButton
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, pyqtSignal
 from utils.ui_styler import UIStyler
 
 class CreateTournamentPanel(QWidget, UIStyler):
+    submitPressed = pyqtSignal(str)
+
     def __init__(self):
         super().__init__()
         self.setup_ui()
 
-    def setup_ui(self):
+    def setup_ui(self) -> None:
         panel_layout = QVBoxLayout(self)
         panel_layout.setContentsMargins(70,50,70,70)
 
@@ -19,20 +21,22 @@ class CreateTournamentPanel(QWidget, UIStyler):
         self.style_line_edit(tournament_name_input, "20px")
         tournament_name_input.setFixedHeight(60)
 
-        validation_error_label = QLabel("This will only appear when validtion fails")
-        self.style_error_label(validation_error_label)
+        self.__validation_error_label = QLabel()
+        self.style_error_label(self.__validation_error_label)
 
         submit_button = QPushButton("Submit")
         self.style_button(submit_button, "25px")
         submit_button.setFixedSize(200, 65)
+        submit_button.clicked.connect(lambda: self.submitPressed.emit(tournament_name_input.text()))
+
 
 
         panel_layout.addWidget(header_label)
         panel_layout.addSpacing(20)
         panel_layout.addWidget(tournament_name_input)
-        panel_layout.addWidget(validation_error_label)
+        panel_layout.addWidget(self.__validation_error_label)
         panel_layout.addStretch()
         panel_layout.addWidget(submit_button)
 
-        validation_error_label.setText("")
-        
+    def handle_validation_result(self, result: str) -> None:
+        self.__validation_error_label.setText(result)
