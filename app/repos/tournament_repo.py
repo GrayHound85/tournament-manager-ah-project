@@ -11,4 +11,7 @@ class TournamentRepo:
         return result
 
     def add_tournament(self, name):
-        print(f"Adding tournament... {name}")
+        self.__schema_cur.execute(f"CREATE DATABASE {name};")
+    
+    def delete_tournament(self, name):
+        self.__schema_cur.execute(f"DROP DATABASE {name};")
