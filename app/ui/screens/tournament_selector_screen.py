@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import QWidget, QFrame, QVBoxLayout, QHBoxLayout, QSizePolicy, QLabel, QPushButton, QStackedWidget
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, pyqtSignal
 from utils.ui_styler import UIStyler
 from ui.components.create_tournament_panel import CreateTournamentPanel
 from ui.components.open_tourmanent_panel import OpenTournamentPanel
@@ -9,6 +9,8 @@ if TYPE_CHECKING:
     from controllers.tournament_selector_controller import TournamentSelectorController
 
 class TournamentSelectorScreen(QWidget, UIStyler):
+    openTournament = pyqtSignal()
+
     def __init__(self, controller: "TournamentSelectorController"):
         super().__init__()
         self.__controller = controller
@@ -115,14 +117,14 @@ class TournamentSelectorScreen(QWidget, UIStyler):
 
         self.create_tournament_panel = CreateTournamentPanel() 
         self.create_tournament_panel.submitPressed.connect(self.__controller.submit_tournament_creation)
-        self.__controller.validationError.connect(self.create_tournament_panel.handle_validation_result)      
+        self.__controller.validationError.connect(self.create_tournament_panel.handle_validation_result) 
+        self.__controller.openTournament.connect(self.openTournament.emit)  
         panel_stacker.addWidget(self.create_tournament_panel)
 
 
         self.open_tournament_panel = OpenTournamentPanel()
         panel_stacker.addWidget(self.open_tournament_panel)
         self.open_tournament_panel.deleteClicked.connect(self.__controller.delete_tournament_request)
-        print("OH NO",self.__controller.get_all_tournament())
         self.open_tournament_panel.display_tournaments(self.__controller.get_all_tournament())
 
         

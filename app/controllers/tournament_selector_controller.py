@@ -9,6 +9,7 @@ if TYPE_CHECKING:
 
 class TournamentSelectorController(QObject):
     validationError = pyqtSignal(str)
+    openTournament = pyqtSignal()
 
     def __init__(self, tournament_repo):
         super().__init__()
@@ -35,8 +36,8 @@ class TournamentSelectorController(QObject):
         validation_result = self._validate_tournament_name(name)
         if validation_result == "":
             db_name = name + self.__tournament_name_suffix
-            print(db_name)
             self.__tournament_repo.add_tournament(db_name)
+            self.openTournament.emit()
 
         self.validationError.emit(validation_result)
 
@@ -55,7 +56,7 @@ class TournamentSelectorController(QObject):
         elif name in tournament_names:
             return "Name already in use"
         elif no_special_charcters == False:
-            return "Name can only contain lowercase letters, numbers and _"
+            return "Name can only contain: \n- Lowercase letters \n- Numbers \n- _"
         else:
             return ""
     

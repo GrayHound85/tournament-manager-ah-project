@@ -2,29 +2,46 @@ from PyQt6.QtWidgets import QApplication
 from PyQt6.QtCore import QSize
 import sys
 
+from app.utils.app_window import AppWindow
 from database.mysql_server_connection import Database
+
 from repos.tournament_repo import TournamentRepo
+
 from controllers.tournament_selector_controller import TournamentSelectorController
+
 from ui.screens.tournament_selector_screen import TournamentSelectorScreen
+from ui.screens.page_changer_screen import PageChangerScreen
 
 
 app = QApplication(sys.argv)
+app_window = AppWindow()
 
+# Database
 db = Database(host="localhost", username="root", password="7632")
 server_connection, schema_cursor = db.connect_to_server()
 
+# Repos
 tournament_repo = TournamentRepo(schema_cursor=schema_cursor)
 
+# Controllers
 tournament_selector_controller = TournamentSelectorController(tournament_repo=tournament_repo)
 
+# Screens
 tournament_selector_screen = TournamentSelectorScreen(controller=tournament_selector_controller)
+page_changer_screen = PageChangerScreen()
 
 
-window = tournament_selector_screen
-window.setMinimumSize(1000, 500)
-window.resize(1600, 800)
-window.setWindowTitle("Tournament Manager")
-window.show()
+# App window + screen changing
+app_window.add_screen(tournament_selector_screen)
+app_window.add_screen(page_changer_screen)
+
+tournament_selector_screen.openTournament.connect(lambda: app_window.show_screen(page_changer_screen))
+
+
+app_window.setMinimumSize(1000, 500)
+app_window.resize(1600, 800)
+app_window.setWindowTitle("Tournament Manager")
+app_window.show()
 
 
 sys.exit(app.exec())
