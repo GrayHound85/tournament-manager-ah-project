@@ -1,5 +1,5 @@
 
 
-class Participant:
-    def __init__(self, name, id):
-        print(f"{name}, has been added with id: {id}")
+class Match:
+    def __init__(self, id, participants):
+        print(f"Match created with id: {id}, participants: {participants}")

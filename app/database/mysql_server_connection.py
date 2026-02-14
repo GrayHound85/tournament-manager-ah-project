@@ -6,6 +6,11 @@ class Database:
         self.__user = username
         self.__passwd = password
         self.__db = ""
+
+        self.__server_connection, self.__schema_cursor = self.connect_to_server()
+        
+        self.__db_connection = None
+        self.__db_cursor = None
     
 
     def validate_connection_credentials(self) -> bool:
@@ -36,7 +41,12 @@ class Database:
                 db=self.__db
             )
             db_cursor = db_connection.cursor()
-            return db_connection, db_cursor
-        else:
-            print("Can't connect to database: Some connection credentails are missing")
-            return
+            self.__db_connection = db_connection
+            self.__db_cursor = db_cursor
+            print(f"Connected to database: {db_name}")
+
+    def get_db_cursor(self):
+        return self.__db_cursor
+    
+    def get_schema_cursor(self):
+        return self.__schema_cursor

@@ -2,7 +2,7 @@ from PyQt6.QtWidgets import QApplication
 from PyQt6.QtCore import QSize
 import sys
 
-from app.utils.app_window import AppWindow
+from utils.app_window import AppWindow
 from database.mysql_server_connection import Database
 
 from repos.tournament_repo import TournamentRepo
@@ -21,10 +21,10 @@ db = Database(host="localhost", username="root", password="7632")
 server_connection, schema_cursor = db.connect_to_server()
 
 # Repos
-tournament_repo = TournamentRepo(schema_cursor=schema_cursor)
+tournament_repo = TournamentRepo(db=db)
 
 # Controllers
-tournament_selector_controller = TournamentSelectorController(tournament_repo=tournament_repo)
+tournament_selector_controller = TournamentSelectorController(repo=tournament_repo)
 
 # Screens
 tournament_selector_screen = TournamentSelectorScreen(controller=tournament_selector_controller)

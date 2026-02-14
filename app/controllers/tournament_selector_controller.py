@@ -11,9 +11,9 @@ class TournamentSelectorController(QObject):
     validationError = pyqtSignal(str)
     openTournament = pyqtSignal()
 
-    def __init__(self, tournament_repo):
+    def __init__(self, repo):
         super().__init__()
-        self.__tournament_repo: "TournamentRepo" = tournament_repo
+        self.__tournament_repo: "TournamentRepo" = repo
         self.__tournament_name_suffix = "_td"
 
     
@@ -26,6 +26,10 @@ class TournamentSelectorController(QObject):
                 tournament_names.append(name[:-3])
 
         return tournament_names
+    
+    
+    def open_tournament_request(self, name: str) -> None:
+        self.__tournament_repo.open_tournament(name + self.__tournament_name_suffix)
     
 
     def delete_tournament_request(self, name: str) -> None:

@@ -1,5 +1,5 @@
-import mysql.connector
 
-class Match:
-    def __init__(self, id, participants):
-        print(f"Match created with id: {id}, participants: {participants}")
+    
+class Participant:
+    def __init__(self, id, name):
+        print(f"{name}, has been added with id: {id}")

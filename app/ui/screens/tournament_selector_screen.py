@@ -125,6 +125,8 @@ class TournamentSelectorScreen(QWidget, UIStyler):
         self.open_tournament_panel = OpenTournamentPanel()
         panel_stacker.addWidget(self.open_tournament_panel)
         self.open_tournament_panel.deleteClicked.connect(self.__controller.delete_tournament_request)
+        self.open_tournament_panel.openClicked.connect(self.__controller.open_tournament_request)
+        self.open_tournament_panel.openClicked.connect(self.openTournament.emit)
         self.open_tournament_panel.display_tournaments(self.__controller.get_all_tournament())
 
         

@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QScrollArea, QSizePolicy, QFrame
+from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QScrollArea, QFrame
 from PyQt6.QtCore import pyqtSignal, Qt
 from PyQt6.QtGui import QIcon
 from utils.ui_styler import UIStyler
@@ -44,6 +44,7 @@ class OpenTournamentPanel(QWidget, UIStyler):
             
             for row in self.__tournament_rows.values():
                 row.deleteClicked.connect(self.delete_tournament)
+                row.openClicked.connect(self.open_tournament)
                 self.tournament_row_layout.addWidget(row)
         else:
             print("You have not created a tournament yet")
@@ -54,6 +55,9 @@ class OpenTournamentPanel(QWidget, UIStyler):
         self.tournament_row_layout.removeWidget(tournament)
         tournament.setParent(None)
         tournament.deleteLater()
+    
+    def open_tournament(self, name):
+        self.openClicked.emit(name)
 
     
 
@@ -71,12 +75,13 @@ class TournamentRow(QFrame, UIStyler):
         self.style_panel_2(frame=self)
         self.setFixedHeight(60)
         self.setContentsMargins(0,0,0,0)
-        button = QPushButton(self.__name)
-        button.setFixedHeight(60)
-        button.setFlat(True)
-        self.style_button_2(button, "20px")
+        open_button = QPushButton(self.__name)
+        open_button.setFixedHeight(60)
+        open_button.setFlat(True)
+        open_button.clicked.connect(lambda: self.openClicked.emit(self.__name))
+        self.style_button_2(open_button, "20px")
         layout = QHBoxLayout(self)
-        layout.addWidget(button)
+        layout.addWidget(open_button)
         layout.setContentsMargins(0,0,0,0)
 
         delete_button = QPushButton()
