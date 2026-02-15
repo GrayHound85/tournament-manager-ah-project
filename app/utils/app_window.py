@@ -7,6 +7,7 @@ class AppWindow(QWidget):
 
         layout = QVBoxLayout(self)
         layout.addWidget(self.stack)
+        layout.setContentsMargins(0,0,0,0)
 
     
     def add_screen(self, widget):

@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QWidget, QFrame, QPushButton, QLineEdit, QLabel, QScrollArea
+from PyQt6.QtWidgets import QWidget, QFrame, QPushButton, QLineEdit, QLabel, QScrollArea, QTableWidget
 from PyQt6.QtCore import Qt
 from enum import Enum
 
@@ -159,5 +159,39 @@ class UIStyler():
         widget.setStyleSheet(f"""
             * {{
                 background: transparent;
+            }}
+        """)
+    
+    def style_tab_container(self, tab_container: QTableWidget):
+        tab_container.setStyleSheet(f"""
+            QTabBar::tab {{
+                background: {Colour.BASE2.value};
+                color: {Colour.FONT.value};
+                padding: 8px 20px;
+                border-top-left-radius: {Size.BORDER_INNER_RADIUS.value};
+                border-top-right-radius: {Size.BORDER_INNER_RADIUS.value};
+                position: relative;
+                top: 6px;
+                border: none;
+            }}
+
+            QTabBar::tab:selected {{
+                background: {Colour.BASE.value};
+                font-size: 16px;
+                top: 0px;
+            }}
+
+            QTabBar::tab:hover {{
+                background: {Colour.BASE3.value};
+            }}
+
+            QTabWidget::pane {{
+                border: none;
+                margin: 0px;
+                padding: 0px;
+            }}
+
+            QTabWidget {{
+                border: none;
             }}
         """)
