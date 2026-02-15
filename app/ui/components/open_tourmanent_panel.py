@@ -49,14 +49,14 @@ class OpenTournamentPanel(QWidget, UIStyler):
         else:
             print("You have not created a tournament yet")
     
-    def delete_tournament(self, name):
+    def delete_tournament(self, name) -> None:
         self.deleteClicked.emit(name)
         tournament = self.__tournament_rows.pop(name)
         self.tournament_row_layout.removeWidget(tournament)
         tournament.setParent(None)
         tournament.deleteLater()
     
-    def open_tournament(self, name):
+    def open_tournament(self, name) -> None:
         self.openClicked.emit(name)
 
     

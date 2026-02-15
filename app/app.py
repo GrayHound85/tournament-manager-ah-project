@@ -18,7 +18,6 @@ app_window = AppWindow()
 
 # Database
 db = Database(host="localhost", username="root", password="7632")
-server_connection, schema_cursor = db.connect_to_server()
 
 # Repos
 tournament_repo = TournamentRepo(db=db)
