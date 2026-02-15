@@ -1,14 +1,18 @@
 import mysql.connector
-from app.models.participant_model import Participant
+from models.participant_model import Participant
+
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from database.mysql_server_connection import Database
 
 class ParticipantRepo:
-    def __init__(self):
-        self.__participant_list = []
-        self.__db = None
+    def __init__(self, db):
+        self.__participant_list: list[Participant] = []
+        self.__db: Database = db
         self.__id_counter = 0
     
 
-    def add_participant(self, name):
+    def add_participant(self, name) -> None:
         if self.__db == None:
             print("Tournament database has not been set.")
             return
