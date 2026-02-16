@@ -41,6 +41,7 @@ class TournamentSelectorController(QObject):
         if validation_result == "":
             db_name = name + self.__tournament_name_suffix
             self.__tournament_repo.add_tournament(db_name)
+            self.__tournament_repo.setup_database()
             self.openTournament.emit()
 
         self.validationError.emit(validation_result)
