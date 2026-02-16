@@ -59,6 +59,7 @@ class UIStyler():
             * {{
                 color: {Colour.FONT.value};
                 font-size: {size};
+                text-align: center;
             }}
         """)
     
@@ -193,5 +194,16 @@ class UIStyler():
 
             QTabWidget {{
                 border: none;
+            }}
+        """)
+    
+    def style_counter_label(self, label: QLabel, size: str):
+        label.setStyleSheet(f"""
+            * {{
+                background: {Colour.BASE.value};
+                border-radius: {Size.BORDER_INNER_RADIUS.value};
+                color: {Colour.FONT.value};
+                font-size: {size};
+                text-align: center;
             }}
         """)
