@@ -12,6 +12,7 @@ class Colour(Enum):
     FONT = "#535353"
     FONT_INVERSE = "#EAEAEA"
     ERROR = "#F21515"
+    SUCCESS = "#11CF00"
 
 class Size(Enum):
     PADDING = "8px"
@@ -109,6 +110,14 @@ class UIStyler():
         label.setStyleSheet(f"""
             QLabel {{
                 color: {Colour.ERROR.value};
+                font-size: {size};
+            }}
+        """)
+
+    def style_success_label(self, label: QLabel, size: str = "20px"):
+        label.setStyleSheet(f"""
+            QLabel {{
+                color: {Colour.SUCCESS.value};
                 font-size: {size};
             }}
         """) 

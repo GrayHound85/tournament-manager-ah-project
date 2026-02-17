@@ -48,5 +48,8 @@ class Database:
     def get_db_cursor(self):
         return self.__db_cursor
     
+    def get_db_connection(self):
+        return self.__db_connection
+    
     def get_schema_cursor(self):
         return self.__schema_cursor
