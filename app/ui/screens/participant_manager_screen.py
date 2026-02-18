@@ -137,6 +137,8 @@ class ParticipantManagerScreen(QWidget, UIStyler):
         scroll_content = QWidget()
         scroll_content.setStyleSheet("background: transparent;")
         scroll_area.setWidget(scroll_content)
+        self.__scroll_content_layout = QVBoxLayout(scroll_content)
+        self.__scroll_content_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
 
         display_panel_layout.addWidget(table_headings_container)
         display_panel_layout.addWidget(scroll_area)
@@ -145,10 +147,28 @@ class ParticipantManagerScreen(QWidget, UIStyler):
         panel_layout.addWidget(display_panel, 2)
     
 
-    def _handle_add_participant_validation_result(self, result: str) -> None:
+    def initailise(self):
+        participant_list: list = self.__controller.get_participant_list()
+        for participant in participant_list:
+            id = participant.get_id()
+            name = participant.get_name()
+            print(name)
+            row = TableRow(id, name)
+            self.__scroll_content_layout.addWidget(row)
+    
+
+    def _handle_add_participant_validation_result(self, result: str, participant) -> None:
         if result == "":
             self.__adding_participant_status_label.setText("Successfully added particpant")
             self.style_success_label(self.__adding_participant_status_label)
+
+            participant_list = self.__controller.get_participant_list()
+            index = participant_list.index(participant)
+            id = participant.get_id()
+            name = participant.get_name()
+            row = TableRow(id, name)
+            self.__scroll_content_layout.insertWidget(index, row)
+
         elif result != "":
             self.__adding_participant_status_label.setText(result)
             self.style_error_label(self.__adding_participant_status_label)
@@ -160,3 +180,32 @@ class ParticipantManagerScreen(QWidget, UIStyler):
         elif result != "":
             self.__delete_participant_status_label.setText(result)
             self.style_error_label(self.__delete_participant_status_label)
+
+
+class TableRow(QFrame, UIStyler):
+    def __init__(self, id: int, name: str):
+        super().__init__()
+        self.__id = id
+        self.__name = name
+
+        self.setup_ui()
+
+    def setup_ui(self):
+        self.setFixedHeight(40)
+        self.style_panel_3(self)
+
+        layout = QHBoxLayout(self)
+        layout.setAlignment(Qt.AlignmentFlag.AlignVCenter)
+
+        id_label = QLabel(str(self.__id))
+        self.set_font_heading(id_label, "20px")
+        name_label = QLabel(self.__name)
+        self.set_font_heading(name_label, "20px")
+
+        seperator_line = QFrame()
+        seperator_line.setFrameShape(QFrame.Shape.VLine)
+        self.style_seperator_line(seperator_line, 25)
+
+        layout.addWidget(id_label, 2)
+        layout.addWidget(seperator_line)
+        layout.addWidget(name_label, 8)

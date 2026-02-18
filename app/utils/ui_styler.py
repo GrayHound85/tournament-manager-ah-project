@@ -94,6 +94,14 @@ class UIStyler():
                 border-radius: {Size.BORDER_INNER_RADIUS.value};
             }}
         """)
+
+    def style_panel_3(self, frame: QFrame) -> None:
+        frame.setStyleSheet(f"""
+            QFrame {{
+                background-color: {Colour.BASE.value};
+                border-radius: {Size.BORDER_INNER_RADIUS.value};
+            }}
+        """)
     
     def style_line_edit(self, widget: QLineEdit, size: str = "10px"):
         widget.setStyleSheet(f"""
