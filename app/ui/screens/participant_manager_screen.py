@@ -47,14 +47,14 @@ class ParticipantManagerScreen(QWidget, UIStyler):
         seperator_line_1.setFrameShape(QFrame.Shape.HLine)
         self.style_seperator_line(seperator_line_1, 400)
 
-        new_participant_input = QLineEdit()
-        new_participant_input.setPlaceholderText("Enter new participant name")
-        new_participant_input.setFixedHeight(60)
-        self.style_line_edit(new_participant_input, "20px")
+        self.new_participant_input = QLineEdit()
+        self.new_participant_input.setPlaceholderText("Enter new participant name")
+        self.new_participant_input.setFixedHeight(60)
+        self.style_line_edit(self.new_participant_input, "20px")
 
         submit_new_participant_button = QPushButton("Add participant")
         submit_new_participant_button.setFixedHeight(60)
-        submit_new_participant_button.clicked.connect(lambda: self.__controller.add_participant_requested(new_participant_input.text()))
+        submit_new_participant_button.clicked.connect(lambda: self.__controller.add_participant_requested(self.new_participant_input.text()))
         self.__controller.addValidationResult.connect(self._handle_add_participant_validation_result)
         self.style_button(submit_new_participant_button, "20px")
 
@@ -65,14 +65,14 @@ class ParticipantManagerScreen(QWidget, UIStyler):
         seperator_line_2.setFrameShape(QFrame.Shape.HLine)
         self.style_seperator_line(seperator_line_2, 400)
 
-        participant_to_delete_input = QLineEdit()
-        participant_to_delete_input.setPlaceholderText("Enter name of existing participant")
-        participant_to_delete_input.setFixedHeight(60)
-        self.style_line_edit(participant_to_delete_input, "20px")
+        self.participant_to_delete_input = QLineEdit()
+        self.participant_to_delete_input.setPlaceholderText("Enter name of existing participant")
+        self.participant_to_delete_input.setFixedHeight(60)
+        self.style_line_edit(self.participant_to_delete_input, "20px")
 
         delete_participant_button = QPushButton("Delete participant")
         delete_participant_button.setFixedHeight(60)
-        delete_participant_button.clicked.connect(lambda: self.__controller.delete_participant_request(participant_to_delete_input.text()))
+        delete_participant_button.clicked.connect(lambda: self.__controller.delete_participant_request(self.participant_to_delete_input.text()))
         self.__controller.deleteValidationResult.connect(self._handle_delete_participant_validation_result)
         self.style_button(delete_participant_button, "20px")
 
@@ -88,16 +88,16 @@ class ParticipantManagerScreen(QWidget, UIStyler):
         counter_layout.setContentsMargins(0,0,0,0)
         static_label = QLabel("Total \nParticipants")
         self.set_font_heading(static_label, "20px")
-        participant_count_label = QLabel("1024")
-        participant_count_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.style_counter_label(participant_count_label, "30px")
+        self.participant_count_label = QLabel("1024")
+        self.participant_count_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.style_counter_label(self.participant_count_label, "30px")
         counter_layout.addWidget(static_label)
-        counter_layout.addWidget(participant_count_label)
+        counter_layout.addWidget(self.participant_count_label)
 
         control_panel_layout.addWidget(heading)
         control_panel_layout.addWidget(seperator_line_1, alignment=Qt.AlignmentFlag.AlignHCenter)
         control_panel_layout.addSpacing(20)
-        control_panel_layout.addWidget(new_participant_input)
+        control_panel_layout.addWidget(self.new_participant_input)
         control_panel_layout.addSpacing(20)
         control_panel_layout.addWidget(submit_new_participant_button)
         control_panel_layout.addSpacing(10)
@@ -105,7 +105,7 @@ class ParticipantManagerScreen(QWidget, UIStyler):
         control_panel_layout.addSpacing(20)
         #control_panel_layout.addWidget(seperator_line_2)
         control_panel_layout.addSpacing(20)
-        control_panel_layout.addWidget(participant_to_delete_input)
+        control_panel_layout.addWidget(self.participant_to_delete_input)
         control_panel_layout.addSpacing(20)
         control_panel_layout.addWidget(delete_participant_button)
         control_panel_layout.addSpacing(10)
@@ -132,6 +132,7 @@ class ParticipantManagerScreen(QWidget, UIStyler):
 
         scroll_area = QScrollArea()
         scroll_area.setWidgetResizable(True)
+        scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.style_scroll_area(scroll_area)
 
         scroll_content = QWidget()
@@ -148,13 +149,16 @@ class ParticipantManagerScreen(QWidget, UIStyler):
     
 
     def initailise(self):
+        self.__participant_rows = {}
         participant_list: list = self.__controller.get_participant_list()
         for participant in participant_list:
             id = participant.get_id()
             name = participant.get_name()
-            print(name)
             row = TableRow(id, name)
+            self.__participant_rows[name] = row
             self.__scroll_content_layout.addWidget(row)
+
+            self.participant_count_label.setText(str(len(self.__controller.get_participant_list())))
     
 
     def _handle_add_participant_validation_result(self, result: str, participant) -> None:
@@ -162,21 +166,32 @@ class ParticipantManagerScreen(QWidget, UIStyler):
             self.__adding_participant_status_label.setText("Successfully added particpant")
             self.style_success_label(self.__adding_participant_status_label)
 
-            participant_list = self.__controller.get_participant_list()
-            index = participant_list.index(participant)
+            index = self.__controller.get_participant_list().index(participant)
             id = participant.get_id()
             name = participant.get_name()
             row = TableRow(id, name)
+            self.__participant_rows[name] = row
             self.__scroll_content_layout.insertWidget(index, row)
+
+            self.new_participant_input.setText("")
+            self.participant_count_label.setText(str(len(self.__controller.get_participant_list())))
 
         elif result != "":
             self.__adding_participant_status_label.setText(result)
             self.style_error_label(self.__adding_participant_status_label)
 
-    def _handle_delete_participant_validation_result(self, result: str) -> None:
+    def _handle_delete_participant_validation_result(self, result: str, name: str) -> None:
         if result == "":
             self.__delete_participant_status_label.setText("Successfully deleted particpant")
             self.style_success_label(self.__delete_participant_status_label)
+            participant = self.__participant_rows.pop(name)
+            self.__scroll_content_layout.removeWidget(participant)
+            participant.setParent(None)
+            participant.deleteLater()
+
+            self.participant_to_delete_input.setText("")
+            self.participant_count_label.setText(str(len(self.__controller.get_participant_list())))
+
         elif result != "":
             self.__delete_participant_status_label.setText(result)
             self.style_error_label(self.__delete_participant_status_label)
@@ -198,8 +213,10 @@ class TableRow(QFrame, UIStyler):
         layout.setAlignment(Qt.AlignmentFlag.AlignVCenter)
 
         id_label = QLabel(str(self.__id))
+        id_label.setMinimumWidth(200)
         self.set_font_heading(id_label, "20px")
         name_label = QLabel(self.__name)
+        name_label.setMaximumWidth(700)
         self.set_font_heading(name_label, "20px")
 
         seperator_line = QFrame()

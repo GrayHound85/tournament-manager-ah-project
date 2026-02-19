@@ -22,7 +22,7 @@ class TournamentRepo:
         self.__db.get_db_cursor().execute(f"""
             CREATE TABLE Participants(
                 participantID INT PRIMARY KEY NOT NULL,
-                participantName VARCHAR(128) NOT NULL
+                participantName VARCHAR(256) NOT NULL
             );
         """)
 

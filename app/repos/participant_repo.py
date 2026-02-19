@@ -30,6 +30,7 @@ class ParticipantRepo:
 
         # Set __id_counter to the max id found
         self.__id_counter = StandardAlgorithms.find_max(self.__participant_list, "id") + 1
+        self.__participant_list = StandardAlgorithms.insertion_sort(self.__participant_list, "name")
 
     
     def confirm_database_connection(self) -> bool:
@@ -59,16 +60,20 @@ class ParticipantRepo:
         return new_participant
 
 
-    def delete_participant(self, id: int) -> None:
+    def delete_participant(self, index: int) -> None:
         if not self.confirm_database_connection():
             return
         
+        id = self.__participant_list[index].get_id()
+        
+        print(f"deleting {id}")
+        
         self.__db.get_db_cursor().execute(f"""
-            DELETE FROM Participants WHERE participantID = {id};
-        """)
-        self.__db.get_db_connection().commit()
+            DELETE FROM Participants WHERE participantID = %s;
+        """, (id,))
 
-        self.__participant_list = StandardAlgorithms.insertion_sort(self.__participant_list, "name")
+        self.__db.get_db_connection().commit()
+        self.__participant_list.pop(index)
     
 
     def get_participant_list(self):

@@ -5,7 +5,7 @@ class Participant:
         self.id = id
         self.name = name
 
-        print(f"{name}, has been added with id: {id}")
+        #print(f"{name}, has been added with id: {id}")
 
     def get_id(self) -> int:
         return self.id
