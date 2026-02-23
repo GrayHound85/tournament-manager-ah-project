@@ -224,3 +224,44 @@ class UIStyler():
                 text-align: center;
             }}
         """)
+
+    def style_spinbox(self, spinbox):
+        spinbox.setStyleSheet(f"""
+            QSpinBox {{
+                background-color: {Colour.BASE3.value};
+                border: 2px solid {Colour.BASE3.value};
+                border-radius: {Size.BORDER_INNER_RADIUS.value};
+                padding: 4px 8px;
+                color: {Colour.FONT_INVERSE.value};
+                font-size: 20px;
+            }}
+
+            QSpinBox:hover {{
+                border: 2px solid {Colour.PRIMARY.value};
+            }}
+
+            QSpinBox::up-button,
+            QSpinBox::down-button {{
+                width: 22px;
+                border: none;
+                background: transparent;
+            }}
+
+            QSpinBox::up-arrow {{
+                image: none;
+                border-left: 5px solid transparent;
+                border-right: 5px solid transparent;
+                border-bottom: 7px solid white;
+                width: 0px;
+                height: 0px;
+            }}
+
+            QSpinBox::down-arrow {{
+                image: none;
+                border-left: 5px solid transparent;
+                border-right: 5px solid transparent;
+                border-top: 7px solid white;
+                width: 0px;
+                height: 0px;
+            }}
+        """)

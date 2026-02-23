@@ -6,7 +6,13 @@ if TYPE_CHECKING:
     from repos.match_repo import MatchRepo
 
 class ScoreManagerController(QObject):
+    fixturesGenerated = pyqtSignal()
+
     def __init__(self, participant_repo, match_repo):
         super().__init__()
         self.__participant_repo: ParticipantRepo = participant_repo
         self.__match_repo: MatchRepo = match_repo
+
+    
+    def request_fixture_generation(self):
+        self.fixturesGenerated.emit()
