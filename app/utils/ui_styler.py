@@ -240,28 +240,13 @@ class UIStyler():
                 border: 2px solid {Colour.PRIMARY.value};
             }}
 
-            QSpinBox::up-button,
-            QSpinBox::down-button {{
-                width: 22px;
+            QSpinBox::up-button, QSpinBox::down-button {{
+                width: 0px;
+                height: 0px;
                 border: none;
-                background: transparent;
             }}
 
-            QSpinBox::up-arrow {{
+            QSpinBox::up-arrow, QSpinBox::down-arrow {{
                 image: none;
-                border-left: 5px solid transparent;
-                border-right: 5px solid transparent;
-                border-bottom: 7px solid white;
-                width: 0px;
-                height: 0px;
-            }}
-
-            QSpinBox::down-arrow {{
-                image: none;
-                border-left: 5px solid transparent;
-                border-right: 5px solid transparent;
-                border-top: 7px solid white;
-                width: 0px;
-                height: 0px;
             }}
         """)

@@ -29,8 +29,8 @@ class ScoreManagerScreen(QWidget, UIStyler):
         layout = QVBoxLayout(frame)
         layout.setContentsMargins(30,30,30,0)
 
-        widget_stacker = QStackedWidget()
-        layout.addWidget(widget_stacker)
+        self.__widget_stacker = QStackedWidget()
+        layout.addWidget(self.__widget_stacker)
 
         # Generate fixtuers panel
         panel_1_container = QWidget()
@@ -53,13 +53,13 @@ class ScoreManagerScreen(QWidget, UIStyler):
 
         generate_fixtures_button = QPushButton("Generate fixtures")
         generate_fixtures_button.setFixedSize(300,60)
-        generate_fixtures_button.clicked.connect(self.__controller.request_fixture_generation)
-        self.__controller.fixturesGenerated.connect(lambda: widget_stacker.setCurrentIndex(1))
+        generate_fixtures_button.clicked.connect(lambda: self.__controller.request_fixture_generation(rounds_input_spinbox.value()))
+        self.__controller.fixturesGenerated.connect(lambda: self.__widget_stacker.setCurrentIndex(1))
         self.style_button(generate_fixtures_button, "20px")
 
         panel_1_layout.addWidget(input_container)
         panel_1_layout.addSpacing(300)
-        panel_1_layout.addWidget(generate_fixtures_button)
+        panel_1_layout.addWidget(generate_fixtures_button, alignment=Qt.AlignmentFlag.AlignHCenter)
 
         # Holds the panel where the user can input score for each match (only appears after fixtures have been generated)
         panel_2_container = QWidget()
@@ -70,6 +70,22 @@ class ScoreManagerScreen(QWidget, UIStyler):
         self.style_panel(score_input_panel)
         score_input_layout = QVBoxLayout(score_input_panel)
         score_input_layout.setContentsMargins(80,40,80,40)
+
+        # Header container
+        self.__header_container = QWidget()
+        self.__header_container.setFixedHeight(20)
+        header_layout = QHBoxLayout(self.__header_container)
+        header_layout.setContentsMargins(0,0,0,0)
+        name_heading_label = QLabel("  Name")
+        self.set_font_heading(name_heading_label, "20px")
+        score_input_heading_label = QLabel("Score")
+        self.set_font_heading(score_input_heading_label, "20px")
+
+        header_layout.addWidget(name_heading_label, 8)
+        header_layout.addWidget(score_input_heading_label, 2)
+        
+        score_input_layout.addWidget(self.__header_container)
+        
         for index in range(4):
             row = ScoreInputRow(str(index)+" This will be a name that is pretty long")
             score_input_layout.addWidget(row)
@@ -106,8 +122,8 @@ class ScoreManagerScreen(QWidget, UIStyler):
         panel_2_layout.addWidget(change_match_panel,1)
 
 
-        widget_stacker.addWidget(panel_1_container)
-        widget_stacker.addWidget(panel_2_container)
+        self.__widget_stacker.addWidget(panel_1_container)
+        self.__widget_stacker.addWidget(panel_2_container)
 
 
 class ScoreInputRow(QFrame, UIStyler):
