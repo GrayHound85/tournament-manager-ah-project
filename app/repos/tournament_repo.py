@@ -32,7 +32,8 @@ class TournamentRepo:
                 matchID INT NOT NULL,
                 matchScore FLOAT NOT NULL,
                 roundNum INT NOT NULL,
-                FOREIGN KEY (participantID) REFERENCES Participants(participantID)
+                FOREIGN KEY (participantID) REFERENCES Participants(participantID),
+                PRIMARY KEY (participantID, matchID)
             );
         """)
     

@@ -5,7 +5,7 @@ class Match:
         self.__id = id
         self.__players = participant_ids
         self.__round = round
-        print(f"Match created with id: {self.__id}, participants: {self.__players}, round: {self.__round}")
+        #print(f"Match created with id: {self.__id}, participants: {self.__players}, round: {self.__round}")
 
     def get_id(self) -> int:
         return self.__id

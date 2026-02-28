@@ -1,4 +1,5 @@
 from PyQt6.QtCore import QObject, pyqtSignal
+from utils.standard_algorithms import StandardAlgorithms
 import random
 
 from typing import TYPE_CHECKING
@@ -14,11 +15,10 @@ class ScoreManagerController(QObject):
         self.__participant_repo: ParticipantRepo = participant_repo
         self.__match_repo: MatchRepo = match_repo
         self.__players_per_match = 4
-        self.__matches_generated = False
 
     
     def request_fixture_generation(self, num_of_rounds: int = 10):
-        if num_of_rounds > 128:
+        if num_of_rounds > 128 or self.__match_repo.fixtures_generated() or num_of_rounds < 1:
             return
         
         for round in range(num_of_rounds):
@@ -32,3 +32,20 @@ class ScoreManagerController(QObject):
         
         
         self.fixturesGenerated.emit()
+
+
+    def fixtures_generated(self) -> bool:
+        return self.__match_repo.fixtures_generated()
+    
+
+    def get_match(self, index):
+        return self.__match_repo.get_matches()[index]
+    
+
+    def get_matches(self):
+        return self.__match_repo.get_matches()
+
+
+    def get_participant_name(self, participant_id: int) -> str:
+        participant = self.__participant_repo.get_participant_list()[StandardAlgorithms.binary_search(self.__participant_repo.get_participant_list(), "id", participant_id)]
+        return participant.get_name()

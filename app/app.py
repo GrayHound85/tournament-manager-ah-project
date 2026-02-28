@@ -58,6 +58,7 @@ tournament_selector_screen.openTournament.connect(lambda: app_window.show_screen
 tournament_selector_screen.openTournament.connect(participant_repo.initailise)
 tournament_selector_screen.openTournament.connect(participant_manager_screen.initailise)
 tournament_selector_screen.openTournament.connect(match_repo.initialise)
+tournament_selector_screen.openTournament.connect(score_manager_screen.initailise)
 
 
 app_window.setMinimumSize(1000, 500)

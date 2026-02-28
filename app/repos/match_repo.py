@@ -10,6 +10,7 @@ class MatchRepo:
         self.__match_list: list[Match] = []
         self.__db: Database = db
         self.__id_counter = 0
+        self.__matches_generated = False
 
     def initialise(self):
         if not self.confirm_database_connection():
@@ -18,15 +19,23 @@ class MatchRepo:
             SELECT *
             FROM MatchScore
         """)
+
+        match_lookup = {}
+
         result = self.__db.get_db_cursor().fetchall()
-        for item in result:
-            participant_id = item[0]
-            match_id = item[1]
-            participant_score = item[2]
-            round = item[3]
-
-            print(f"participant id: {participant_id}, match_id: {match_id}, participant score: {participant_score}, round: {round}")
-
+        for participant_id, match_id, participant_score, round in result:
+            #print(f"participant id: {participant_id}, match_id: {match_id}, participant score: {participant_score}, round: {round}")
+            if match_id not in match_lookup:
+                match_lookup[match_id] = Match(match_id, [participant_id], round)
+            else:
+                match_lookup[match_id].add_participant(participant_id)
+        
+        self.__match_list = list(match_lookup.values())
+        if self.__match_list:
+            self.__matches_generated = True
+            print("Matches have been generated")
+    
+ 
 
     def create_match(self, round_id: int, players: list):
         participant_ids = [player.get_id() for player in players]
@@ -48,3 +57,11 @@ class MatchRepo:
             print("Tournament database has not been set.")
             return False
         return True
+    
+
+    def fixtures_generated(self) -> bool:
+        return self.__matches_generated
+    
+
+    def get_matches(self):
+        return self.__match_list

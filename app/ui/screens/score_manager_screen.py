@@ -11,8 +11,16 @@ class ScoreManagerScreen(QWidget, UIStyler):
     def __init__(self, controller: "ScoreManagerController"):
         super().__init__()
         self.__controller = controller
-
+        self.__match_display_index = 0
         self.setup_ui()
+    
+
+    def initailise(self) -> None:
+        if not self.__controller.fixtures_generated():
+            return
+        
+        self.__widget_stacker.setCurrentIndex(1)
+        self.display_match(0)
     
     def setup_ui(self):
         root_layout = QVBoxLayout(self)
@@ -47,6 +55,8 @@ class ScoreManagerScreen(QWidget, UIStyler):
         input_label = QLabel("Number of rounds")
         self.set_font_heading(input_label, "20px")
         rounds_input_spinbox = QSpinBox()
+        rounds_input_spinbox.setRange(1,128)
+        rounds_input_spinbox.setSingleStep(1)
         self.style_spinbox(rounds_input_spinbox)
         input_container_layout.addWidget(input_label)
         input_container_layout.addWidget(rounds_input_spinbox)
@@ -68,8 +78,8 @@ class ScoreManagerScreen(QWidget, UIStyler):
         # Subpanel for inputing score
         score_input_panel = QFrame()
         self.style_panel(score_input_panel)
-        score_input_layout = QVBoxLayout(score_input_panel)
-        score_input_layout.setContentsMargins(80,40,80,40)
+        self.__score_input_layout = QVBoxLayout(score_input_panel)
+        self.__score_input_layout.setContentsMargins(80,40,80,40)
 
         # Header container
         self.__header_container = QWidget()
@@ -84,19 +94,21 @@ class ScoreManagerScreen(QWidget, UIStyler):
         header_layout.addWidget(name_heading_label, 8)
         header_layout.addWidget(score_input_heading_label, 2)
         
-        score_input_layout.addWidget(self.__header_container)
+        self.__score_input_layout.addWidget(self.__header_container)
         
         for index in range(4):
             row = ScoreInputRow(str(index)+" This will be a name that is pretty long")
-            score_input_layout.addWidget(row)
+            self.__score_input_layout.addWidget(row)
 
         # Subpanel for changing match to display
         change_match_panel = QWidget()
         change_match_layout = QHBoxLayout(change_match_panel)
         previous_match_button = QPushButton("Previous")
+        previous_match_button.clicked.connect(lambda: self.display_match(-1))
         previous_match_button.setFixedSize(200,60)
         self.style_button(previous_match_button, "20px")
         next_match_button = QPushButton("Next + Submit")
+        next_match_button.clicked.connect(lambda: self.display_match(1))
         next_match_button.setFixedSize(200,60)
         self.style_button(next_match_button, "20px")
 
@@ -125,6 +137,23 @@ class ScoreManagerScreen(QWidget, UIStyler):
         self.__widget_stacker.addWidget(panel_1_container)
         self.__widget_stacker.addWidget(panel_2_container)
 
+    
+    def display_match(self, next: int) -> None:
+        while self.__score_input_layout.count():
+            widget = self.__score_input_layout.takeAt(0)
+            widget.widget().deleteLater()
+
+        self.__score_input_layout.addWidget(self.__header_container)
+        match = self.__controller.get_match(self.__match_display_index)
+        for participant in match.get_participants():
+            name = self.__controller.get_participant_name(participant)
+            row = ScoreInputRow(name)
+            self.__score_input_layout.addWidget(row)
+        
+        if len(self.__controller.get_matches()) > self.__match_display_index and self.__match_display_index > 0:
+            self.__match_display_index += next
+
+
 
 class ScoreInputRow(QFrame, UIStyler):
     def __init__(self, name: str):
@@ -133,7 +162,7 @@ class ScoreInputRow(QFrame, UIStyler):
         self.setup_ui()
 
     
-    def setup_ui(self):
+    def setup_ui(self) -> None:
         self.style_panel_3(self)
         self.setFixedHeight(60)
         layout = QHBoxLayout(self)
@@ -144,6 +173,8 @@ class ScoreInputRow(QFrame, UIStyler):
         seperator_line.setFrameShape(QFrame.Shape.VLine)
         self.style_seperator_line(seperator_line, 40)
         score_input_field = QSpinBox()
+        score_input_field.setRange(1, 1024)
+        score_input_field.setSingleStep(1)
         self.style_spinbox(score_input_field)
 
         layout.addWidget(name_label,8)
