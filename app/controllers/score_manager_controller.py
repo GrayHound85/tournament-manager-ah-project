@@ -47,5 +47,9 @@ class ScoreManagerController(QObject):
 
 
     def get_participant_name(self, participant_id: int) -> str:
-        participant = self.__participant_repo.get_participant_list()[StandardAlgorithms.binary_search(self.__participant_repo.get_participant_list(), "id", participant_id)]
+        participant_list = self.__participant_repo.get_participant_list().copy()
+        participant_list = StandardAlgorithms.insertion_sort(participant_list, "id")
+        participant_index = StandardAlgorithms.binary_search(participant_list, "id", participant_id)
+        print(participant_index)
+        participant = participant_list[participant_index]
         return participant.get_name()

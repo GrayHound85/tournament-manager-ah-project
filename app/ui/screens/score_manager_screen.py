@@ -79,7 +79,9 @@ class ScoreManagerScreen(QWidget, UIStyler):
         score_input_panel = QFrame()
         self.style_panel(score_input_panel)
         self.__score_input_layout = QVBoxLayout(score_input_panel)
-        self.__score_input_layout.setContentsMargins(80,40,80,40)
+        self.__score_input_layout.setContentsMargins(80,60,80,40)
+        self.__score_input_layout.setSpacing(40)
+        self.__stretch_item = None
 
         # Header container
         self.__header_container = QWidget()
@@ -139,19 +141,32 @@ class ScoreManagerScreen(QWidget, UIStyler):
 
     
     def display_match(self, next: int) -> None:
-        while self.__score_input_layout.count():
-            widget = self.__score_input_layout.takeAt(0)
-            widget.widget().deleteLater()
+        if next == 1 and len(self.__controller.get_matches())-1 > self.__match_display_index:
+            self.__match_display_index += next
+
+        if next == -1 and self.__match_display_index > 0:
+            self.__match_display_index += next
+        
+        print(self.__match_display_index)
+        while self.__score_input_layout.count() > 1:
+            item = self.__score_input_layout.takeAt(1)
+            widget = item.widget()
+            if widget is not None:
+                widget.deleteLater()
+        
+        if self.__stretch_item is not None:
+            self.__score_input_layout.removeItem(self.__stretch_item)
 
         self.__score_input_layout.addWidget(self.__header_container)
         match = self.__controller.get_match(self.__match_display_index)
+        #print(match.get_participants())
         for participant in match.get_participants():
+            #print(participant)
             name = self.__controller.get_participant_name(participant)
+            print(name)
             row = ScoreInputRow(name)
             self.__score_input_layout.addWidget(row)
-        
-        if len(self.__controller.get_matches()) > self.__match_display_index and self.__match_display_index > 0:
-            self.__match_display_index += next
+        self.__stretch_item = self.__score_input_layout.addStretch()
 
 
 
