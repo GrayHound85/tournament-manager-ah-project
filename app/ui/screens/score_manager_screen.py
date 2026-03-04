@@ -12,6 +12,7 @@ class ScoreManagerScreen(QWidget, UIStyler):
         super().__init__()
         self.__controller = controller
         self.__match_display_index = 0
+        self.__rows_displayed: dict = {}
         self.setup_ui()
     
 
@@ -64,7 +65,7 @@ class ScoreManagerScreen(QWidget, UIStyler):
         generate_fixtures_button = QPushButton("Generate fixtures")
         generate_fixtures_button.setFixedSize(300,60)
         generate_fixtures_button.clicked.connect(lambda: self.__controller.request_fixture_generation(rounds_input_spinbox.value()))
-        self.__controller.fixturesGenerated.connect(lambda: self.__widget_stacker.setCurrentIndex(1))
+        self.__controller.fixturesGenerated.connect(lambda: (self.__widget_stacker.setCurrentIndex(1), self.display_match(0)))
         self.style_button(generate_fixtures_button, "20px")
 
         panel_1_layout.addWidget(input_container)
@@ -97,10 +98,6 @@ class ScoreManagerScreen(QWidget, UIStyler):
         header_layout.addWidget(score_input_heading_label, 2)
         
         self.__score_input_layout.addWidget(self.__header_container)
-        
-        for index in range(4):
-            row = ScoreInputRow(str(index)+" This will be a name that is pretty long")
-            self.__score_input_layout.addWidget(row)
 
         # Subpanel for changing match to display
         change_match_panel = QWidget()
@@ -110,7 +107,7 @@ class ScoreManagerScreen(QWidget, UIStyler):
         previous_match_button.setFixedSize(200,60)
         self.style_button(previous_match_button, "20px")
         next_match_button = QPushButton("Next + Submit")
-        next_match_button.clicked.connect(lambda: self.display_match(1))
+        next_match_button.clicked.connect(lambda: (self.submit_scores(), self.display_match(1)))
         next_match_button.setFixedSize(200,60)
         self.style_button(next_match_button, "20px")
 
@@ -141,6 +138,8 @@ class ScoreManagerScreen(QWidget, UIStyler):
 
     
     def display_match(self, next: int) -> None:
+        self.__rows_displayed.clear()
+
         if next == 1 and len(self.__controller.get_matches())-1 > self.__match_display_index:
             self.__match_display_index += next
 
@@ -160,17 +159,28 @@ class ScoreManagerScreen(QWidget, UIStyler):
         match = self.__controller.get_match(self.__match_display_index)
         for participant in match.get_participants():
             name = self.__controller.get_participant_name(participant)
-            row = ScoreInputRow(name)
+            score = self.__controller.get_participant_score(self.__match_display_index, participant)
+            row = ScoreInputRow(name, score)
+            self.__rows_displayed[participant] = row
             self.__score_input_layout.addWidget(row)
         self.__match_id_label.setText(str(match.get_id()))
         self.__stretch_item = self.__score_input_layout.addStretch()
+    
+
+    def submit_scores(self):
+        participant_scores = {}
+        for participant_id in self.__rows_displayed:
+            participant_scores[participant_id] = self.__rows_displayed[participant_id].get_score()
+        self.__controller.set_match_scores(self.__match_display_index, participant_scores)
 
 
 
 class ScoreInputRow(QFrame, UIStyler):
-    def __init__(self, name: str):
+    def __init__(self, name: str, score: int):
         super().__init__()
         self.__name = name
+        self.__score: int = score
+        print(self.__score)
         self.setup_ui()
 
     
@@ -184,11 +194,15 @@ class ScoreInputRow(QFrame, UIStyler):
         seperator_line = QFrame()
         seperator_line.setFrameShape(QFrame.Shape.VLine)
         self.style_seperator_line(seperator_line, 40)
-        score_input_field = QSpinBox()
-        score_input_field.setRange(0, 1024)
-        score_input_field.setSingleStep(1)
-        self.style_spinbox(score_input_field)
+        self.__score_input_field = QSpinBox()
+        self.__score_input_field.setValue(int(self.__score))
+        self.__score_input_field.setRange(0, 1024)
+        self.__score_input_field.setSingleStep(1)
+        self.style_spinbox(self.__score_input_field)
 
         layout.addWidget(name_label,8)
         layout.addWidget(seperator_line)
-        layout.addWidget(score_input_field,2)
+        layout.addWidget(self.__score_input_field,2)
+    
+    def get_score(self) -> int:
+        return self.__score_input_field.value()

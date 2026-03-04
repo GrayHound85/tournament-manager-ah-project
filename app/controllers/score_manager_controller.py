@@ -55,3 +55,9 @@ class ScoreManagerController(QObject):
         participant_index = StandardAlgorithms.binary_search(participant_list, "id", participant_id)
         participant = participant_list[participant_index]
         return participant.get_name()
+
+    def get_participant_score(self, match_index: int, participant_id: int) -> int:
+        return self.__match_repo.get_score(match_index, participant_id)
+    
+    def set_match_scores(self, match_index: int, participant_scores: dict) -> None:
+        self.__match_repo.set_match_scores(match_index, participant_scores)

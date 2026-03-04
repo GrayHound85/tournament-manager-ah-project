@@ -19,7 +19,7 @@ class ParticipantRepo:
             return
         self.__db.get_db_cursor().execute("""
             SELECT *
-            FROM Participants          
+            FROM Participants;        
         """)
         result = self.__db.get_db_cursor().fetchall()
         for item in result:
