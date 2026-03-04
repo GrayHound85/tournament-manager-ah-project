@@ -52,11 +52,11 @@ class ParticipantManagerScreen(QWidget, UIStyler):
         self.new_participant_input.setFixedHeight(60)
         self.style_line_edit(self.new_participant_input, "20px")
 
-        submit_new_participant_button = QPushButton("Add participant")
-        submit_new_participant_button.setFixedHeight(60)
-        submit_new_participant_button.clicked.connect(lambda: self.__controller.add_participant_requested(self.new_participant_input.text()))
+        self.__submit_new_participant_button = QPushButton("Add participant")
+        self.__submit_new_participant_button.setFixedHeight(60)
+        self.__submit_new_participant_button.clicked.connect(lambda: self.__controller.add_participant_requested(self.new_participant_input.text()))
         self.__controller.addValidationResult.connect(self._handle_add_participant_validation_result)
-        self.style_button(submit_new_participant_button, "20px")
+        self.style_button(self.__submit_new_participant_button, "20px")
 
         self.__adding_participant_status_label = QLabel("")
         self.style_error_label(self.__adding_participant_status_label)
@@ -70,11 +70,11 @@ class ParticipantManagerScreen(QWidget, UIStyler):
         self.participant_to_delete_input.setFixedHeight(60)
         self.style_line_edit(self.participant_to_delete_input, "20px")
 
-        delete_participant_button = QPushButton("Delete participant")
-        delete_participant_button.setFixedHeight(60)
-        delete_participant_button.clicked.connect(lambda: self.__controller.delete_participant_request(self.participant_to_delete_input.text()))
+        self.__delete_participant_button = QPushButton("Delete participant")
+        self.__delete_participant_button.setFixedHeight(60)
+        self.__delete_participant_button.clicked.connect(lambda: self.__controller.delete_participant_request(self.participant_to_delete_input.text()))
         self.__controller.deleteValidationResult.connect(self._handle_delete_participant_validation_result)
-        self.style_button(delete_participant_button, "20px")
+        self.style_button(self.__delete_participant_button, "20px")
 
         self.__delete_participant_status_label = QLabel("")
         self.style_error_label(self.__delete_participant_status_label)
@@ -99,7 +99,7 @@ class ParticipantManagerScreen(QWidget, UIStyler):
         control_panel_layout.addSpacing(20)
         control_panel_layout.addWidget(self.new_participant_input)
         control_panel_layout.addSpacing(20)
-        control_panel_layout.addWidget(submit_new_participant_button)
+        control_panel_layout.addWidget(self.__submit_new_participant_button)
         control_panel_layout.addSpacing(10)
         control_panel_layout.addWidget(self.__adding_participant_status_label)
         control_panel_layout.addSpacing(20)
@@ -107,7 +107,7 @@ class ParticipantManagerScreen(QWidget, UIStyler):
         control_panel_layout.addSpacing(20)
         control_panel_layout.addWidget(self.participant_to_delete_input)
         control_panel_layout.addSpacing(20)
-        control_panel_layout.addWidget(delete_participant_button)
+        control_panel_layout.addWidget(self.__delete_participant_button)
         control_panel_layout.addSpacing(10)
         control_panel_layout.addWidget(self.__delete_participant_status_label)
         control_panel_layout.addStretch()
@@ -195,6 +195,10 @@ class ParticipantManagerScreen(QWidget, UIStyler):
         elif result != "":
             self.__delete_participant_status_label.setText(result)
             self.style_error_label(self.__delete_participant_status_label)
+        
+    def disable_participant_buttons(self):
+        self.__submit_new_participant_button.setEnabled(False)
+        self.__delete_participant_button.setEnabled(False)
 
 
 class TableRow(QFrame, UIStyler):

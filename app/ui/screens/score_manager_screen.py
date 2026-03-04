@@ -120,10 +120,10 @@ class ScoreManagerScreen(QWidget, UIStyler):
         match_id_container_layout.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         match_id_static_label = QLabel("Match ID")
         self.set_font_heading(match_id_static_label, "20px")
-        match_id_label = QLabel("1024")
-        self.style_counter_label(match_id_label, "30px")
+        self.__match_id_label = QLabel("1024")
+        self.style_counter_label(self.__match_id_label, "30px")
         match_id_container_layout.addWidget(match_id_static_label)
-        match_id_container_layout.addWidget(match_id_label)
+        match_id_container_layout.addWidget(self.__match_id_label)
 
         change_match_layout.addStretch()
         change_match_layout.addWidget(previous_match_button)
@@ -147,7 +147,6 @@ class ScoreManagerScreen(QWidget, UIStyler):
         if next == -1 and self.__match_display_index > 0:
             self.__match_display_index += next
         
-        print(self.__match_display_index)
         while self.__score_input_layout.count() > 1:
             item = self.__score_input_layout.takeAt(1)
             widget = item.widget()
@@ -159,13 +158,11 @@ class ScoreManagerScreen(QWidget, UIStyler):
 
         self.__score_input_layout.addWidget(self.__header_container)
         match = self.__controller.get_match(self.__match_display_index)
-        #print(match.get_participants())
         for participant in match.get_participants():
-            #print(participant)
             name = self.__controller.get_participant_name(participant)
-            print(name)
             row = ScoreInputRow(name)
             self.__score_input_layout.addWidget(row)
+        self.__match_id_label.setText(str(match.get_id()))
         self.__stretch_item = self.__score_input_layout.addStretch()
 
 
@@ -188,7 +185,7 @@ class ScoreInputRow(QFrame, UIStyler):
         seperator_line.setFrameShape(QFrame.Shape.VLine)
         self.style_seperator_line(seperator_line, 40)
         score_input_field = QSpinBox()
-        score_input_field.setRange(1, 1024)
+        score_input_field.setRange(0, 1024)
         score_input_field.setSingleStep(1)
         self.style_spinbox(score_input_field)
 

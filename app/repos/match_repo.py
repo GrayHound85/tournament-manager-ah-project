@@ -1,5 +1,6 @@
 import mysql.connector
 from models.match_model import Match
+from utils.standard_algorithms import StandardAlgorithms
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -23,23 +24,19 @@ class MatchRepo:
         match_lookup = {}
 
         result = self.__db.get_db_cursor().fetchall()
-        #print(result)
         for participant_id, match_id, participant_score, round in result:
             #print(f"participant id: {participant_id}, match_id: {match_id}, participant score: {participant_score}, round: {round}")
             if match_id not in match_lookup:
                 match_lookup[match_id] = Match(match_id, [participant_id], round)
             else:
                 match_lookup[match_id].add_participant(participant_id)
-            
-            #print(match_lookup[match_id].get_participants())
         
         self.__match_list = list(match_lookup.values())
         if self.__match_list:
             self.__matches_generated = True
             print("Matches have been generated")
-
-        #for match in self.__match_list:
-            #print(match.get_participants())
+        
+        self.__match_list = StandardAlgorithms.insertion_sort(self.__match_list, "id")
     
  
 
