@@ -53,13 +53,15 @@ page_changer_screen = PageChangerScreen(screens= {
 # App window + screen changing
 app_window.add_screen(tournament_selector_screen)
 app_window.add_screen(page_changer_screen)
-
 tournament_selector_screen.openTournament.connect(lambda: app_window.show_screen(page_changer_screen))
+
+# Post tournament selection initialisation and interscreen connections.
 tournament_selector_screen.openTournament.connect(participant_repo.initailise)
 tournament_selector_screen.openTournament.connect(participant_manager_screen.initailise)
 tournament_selector_screen.openTournament.connect(match_repo.initialise)
 tournament_selector_screen.openTournament.connect(score_manager_screen.initailise)
 score_manager_controller.fixturesGenerated.connect(participant_manager_screen.disable_participant_buttons)
+score_manager_screen.scoresSubmitted.connect(leader_board_controller.update_scores)
 
 
 app_window.setMinimumSize(1000, 500)

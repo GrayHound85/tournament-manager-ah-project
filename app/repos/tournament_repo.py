@@ -30,7 +30,7 @@ class TournamentRepo:
             CREATE TABLE MatchScore(
                 participantID INT NOT NULL,
                 matchID INT NOT NULL,
-                matchScore FLOAT NOT NULL,
+                matchScore INT NOT NULL,
                 roundNum INT NOT NULL,
                 FOREIGN KEY (participantID) REFERENCES Participants(participantID),
                 PRIMARY KEY (participantID, matchID)

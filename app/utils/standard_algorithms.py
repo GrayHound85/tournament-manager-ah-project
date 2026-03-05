@@ -1,13 +1,28 @@
 
 
 class StandardAlgorithms:
-    def insertion_sort(array: list, attr: str) -> list:
+    def insertion_sort(array: list, key, reverse: bool = False) -> list:
+
+        def get_value(item):
+            if isinstance(key, str):
+                return getattr(item, key)
+            else:
+                return item[key]
+            
+
         for i in range(1, len(array)):
             current = array[i]
-            current_value = getattr(current, attr)
-            while i > 0 and current_value < getattr(array[i-1], attr):
-                array[i] = array[i-1]
-                i-=1
+            current_value = get_value(current)
+            
+            if reverse:
+                while i > 0 and current_value > get_value(array[i-1]):
+                    array[i] = array[i-1]
+                    i-=1
+            else:
+                while i > 0 and current_value < get_value(array[i-1]):
+                    array[i] = array[i-1]
+                    i-=1
+                
             array[i] = current
         return array
 

@@ -250,3 +250,22 @@ class UIStyler():
                 image: none;
             }}
         """)
+    
+    def style_table(self, table):
+        table.setStyleSheet(f"""
+            QTableView {{
+                background-color: {Colour.BASE.value};
+                border: none;
+                gridline-color: {Colour.BASE2.value};
+                color: {Colour.FONT.value};
+                selection-background-color: #3a3a3a;
+                selection-color: white;
+                font-size: 20px;
+            }}
+
+            QTableView::item {{
+                padding: 10px;
+                border-bottom: 3px solid {Colour.BASE2.value};
+                border-top: 3px solid {Colour.BASE2.value};
+            }}
+        """)

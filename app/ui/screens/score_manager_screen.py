@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import QWidget, QFrame, QVBoxLayout, QSizePolicy, QLabel, QStackedWidget, QHBoxLayout, QSpinBox, QPushButton
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, pyqtSignal
 from utils.ui_styler import UIStyler
 
 from typing import TYPE_CHECKING
@@ -8,6 +8,8 @@ if TYPE_CHECKING:
 
 
 class ScoreManagerScreen(QWidget, UIStyler):
+    scoresSubmitted = pyqtSignal()
+
     def __init__(self, controller: "ScoreManagerController"):
         super().__init__()
         self.__controller = controller
@@ -22,6 +24,7 @@ class ScoreManagerScreen(QWidget, UIStyler):
         
         self.__widget_stacker.setCurrentIndex(1)
         self.display_match(0)
+        self.scoresSubmitted.emit()
     
     def setup_ui(self):
         root_layout = QVBoxLayout(self)
@@ -107,7 +110,7 @@ class ScoreManagerScreen(QWidget, UIStyler):
         previous_match_button.setFixedSize(200,60)
         self.style_button(previous_match_button, "20px")
         next_match_button = QPushButton("Next + Submit")
-        next_match_button.clicked.connect(lambda: (self.submit_scores(), self.display_match(1)))
+        next_match_button.clicked.connect(lambda: (self.submit_scores(), self.display_match(1), self.scoresSubmitted.emit()))
         next_match_button.setFixedSize(200,60)
         self.style_button(next_match_button, "20px")
 
@@ -195,8 +198,8 @@ class ScoreInputRow(QFrame, UIStyler):
         seperator_line.setFrameShape(QFrame.Shape.VLine)
         self.style_seperator_line(seperator_line, 40)
         self.__score_input_field = QSpinBox()
-        self.__score_input_field.setValue(int(self.__score))
         self.__score_input_field.setRange(0, 1024)
+        self.__score_input_field.setValue(int(self.__score))
         self.__score_input_field.setSingleStep(1)
         self.style_spinbox(self.__score_input_field)
 
