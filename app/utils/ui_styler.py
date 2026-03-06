@@ -258,13 +258,14 @@ class UIStyler():
                 border: none;
                 gridline-color: {Colour.BASE2.value};
                 color: {Colour.FONT.value};
-                selection-background-color: #3a3a3a;
-                selection-color: white;
+                selection-background-color: {Colour.BASE.value};
+                selection-color: {Colour.FONT.value};
                 font-size: 20px;
             }}
 
             QTableView::item {{
                 padding: 10px;
+                border-radius: {Size.BORDER_INNER_RADIUS.value};
                 border-bottom: 3px solid {Colour.BASE2.value};
                 border-top: 3px solid {Colour.BASE2.value};
             }}
