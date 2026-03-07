@@ -254,19 +254,49 @@ class UIStyler():
     def style_table(self, table):
         table.setStyleSheet(f"""
             QTableView {{
-                background-color: {Colour.BASE.value};
+                background-color: {Colour.BASE2.value};
                 border: none;
-                gridline-color: {Colour.BASE2.value};
+                gridline-color: transparent;
                 color: {Colour.FONT.value};
-                selection-background-color: {Colour.BASE.value};
-                selection-color: {Colour.FONT.value};
                 font-size: 20px;
             }}
 
             QTableView::item {{
-                padding: 10px;
-                border-radius: {Size.BORDER_INNER_RADIUS.value};
-                border-bottom: 3px solid {Colour.BASE2.value};
-                border-top: 3px solid {Colour.BASE2.value};
+                padding: 14px;
+                border-bottom: 6px solid {Colour.BASE2.value};
+                background-color: {Colour.BASE.value};
+            }}
+        """)
+        
+        table.verticalScrollBar().setStyleSheet(f"""
+            QScrollBar:vertical {{
+                width: 20px;
+                margin: 5px 10px 5px 0px;
+                background: transparent;
+                border: none;
+            }}
+
+            QScrollBar::handle:vertical {{
+                background: rgba(150,150,150,180);
+                border-radius: 5px;
+                min-height: 30px;
+            }}
+
+            QScrollBar::handle:vertical:hover {{
+                background: rgba(120,120,120,200);
+            }}
+
+            QScrollBar::handle:vertical:pressed {{
+                background: rgba(100,100,100,220);
+            }}
+
+            QScrollBar::add-line:vertical,
+            QScrollBar::sub-line:vertical {{
+                height: 0px;
+            }}
+
+            QScrollBar::add-page:vertical,
+            QScrollBar::sub-page:vertical {{
+                background: none;
             }}
         """)
