@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QWidget, QFrame, QVBoxLayout, QSizePolicy, QLabel, QTableView, QHBoxLayout, QHeaderView
+from PyQt6.QtWidgets import QWidget, QFrame, QVBoxLayout, QSizePolicy, QLabel, QTableView, QHBoxLayout, QHeaderView, QPushButton, QFileDialog
 from PyQt6.QtCore import Qt
 from utils.ui_styler import UIStyler
 
@@ -29,7 +29,9 @@ class LeaderBoardScreen(QWidget, UIStyler):
 
         layout_backgound = QVBoxLayout(frame)
         layout_backgound.setContentsMargins(40,40,40,40)
+        layout_backgound.setAlignment(Qt.AlignmentFlag.AlignHCenter)
 
+        # Header container
         header_container = QWidget()
         header_container_layout = QHBoxLayout(header_container)
         header_container_layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
@@ -49,6 +51,7 @@ class LeaderBoardScreen(QWidget, UIStyler):
         self.style_panel(table_background)
         layout_backgound.addWidget(table_background)
 
+        # Leaderboard table
         table = QTableView()
         table.setModel(self.__controller.get_model())
         self.style_table(table)
@@ -63,13 +66,6 @@ class LeaderBoardScreen(QWidget, UIStyler):
         table.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         table.setFrameShape(QFrame.Shape.NoFrame)
 
-        """
-        width = table.viewport().width()
-        table.setColumnWidth(0, int(width * 0.15))
-        table.setColumnWidth(1, int(width * 0.70))
-        table.setColumnWidth(2, int(width * 0.15))
-        """
-
         header = table.horizontalHeader()
 
         header.setSectionResizeMode(QHeaderView.ResizeMode.Interactive)
@@ -83,4 +79,23 @@ class LeaderBoardScreen(QWidget, UIStyler):
         layout.setContentsMargins(15,15,0,10)
         layout.addWidget(table)
 
+        # Download CSV UI
+        export_button = QPushButton("Export to CSV")
+        export_button.setFixedSize(250,60)
+        export_button.clicked.connect(self.export_csv)
+        self.style_button(export_button, "20px")
+        layout_backgound.addSpacing(20)
+        layout_backgound.addWidget(export_button, alignment=Qt.AlignmentFlag.AlignHCenter)
 
+
+    def export_csv(self):
+
+        file_path = QFileDialog.getSaveFileName(
+            self,
+            "Save leanderboard",
+            "",
+            "CSV Files (*.csv)"
+        )
+        if not file_path:
+            return
+        self.__controller.export_to_csv(file_path)

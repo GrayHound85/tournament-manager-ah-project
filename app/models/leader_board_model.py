@@ -44,3 +44,6 @@ class LeaderBoardModel(QAbstractTableModel):
         self.beginResetModel()
         self._data = data
         self.endResetModel()
+
+    def get_data(self):
+        return self._data

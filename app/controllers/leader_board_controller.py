@@ -29,3 +29,12 @@ class LeaderBoardController(QObject):
         data = StandardAlgorithms.insertion_sort(data, 1, True)
 
         self.__model.update_data(data)
+
+    def export_to_csv(self, export_path):
+        data = self.__model.get_data()
+        with open(export_path[0]+".csv", "w") as file:
+            file.write("Rank,Name,Score\n")
+
+            for rank, (name, score) in enumerate(data, start=1):
+                line = f"{rank},{name},{score}\n"
+                file.write(line)
